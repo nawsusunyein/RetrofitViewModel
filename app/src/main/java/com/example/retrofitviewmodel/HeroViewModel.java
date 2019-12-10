@@ -19,6 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HeroViewModel extends AndroidViewModel {
 
     private MutableLiveData<List<Hero>> heroList;
+    public MutableLiveData<Boolean> isProgressShow;
 
     public HeroViewModel(Application context){
         super(context);
@@ -26,6 +27,7 @@ public class HeroViewModel extends AndroidViewModel {
 
     public LiveData<List<Hero>> getHeroes(){
         if(heroList == null){
+            //isProgressShow.setValue(true);
             heroList = new MutableLiveData<List<Hero>>();
             loadHeroes();
         }
@@ -45,12 +47,14 @@ public class HeroViewModel extends AndroidViewModel {
         call.enqueue(new Callback<List<Hero>>() {
             @Override
             public void onResponse(Call<List<Hero>> call, Response<List<Hero>> response) {
+                //isProgressShow.setValue(false);
                 heroList.setValue(response.body());
             }
 
             @Override
             public void onFailure(Call<List<Hero>> call, Throwable t) {
                 Log.d("Errror here" ,t.getMessage());
+                //isProgressShow.setValue(false);
                 Toast.makeText(getApplication(),"Error : " + t.getMessage(),Toast.LENGTH_LONG).show();
             }
         });
