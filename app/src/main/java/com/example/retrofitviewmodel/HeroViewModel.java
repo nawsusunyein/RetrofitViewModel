@@ -1,7 +1,12 @@
 package com.example.retrofitviewmodel;
 
+import android.app.Application;
+import android.util.Log;
+import android.widget.Toast;
+
 import java.util.List;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,9 +16,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class HeroViewModel extends ViewModel {
+public class HeroViewModel extends AndroidViewModel {
 
     private MutableLiveData<List<Hero>> heroList;
+
+    public HeroViewModel(Application context){
+        super(context);
+    }
 
     public LiveData<List<Hero>> getHeroes(){
         if(heroList == null){
@@ -22,6 +31,7 @@ public class HeroViewModel extends ViewModel {
         }
         return heroList;
     }
+
 
     private void loadHeroes(){
         Retrofit retrofit = new Retrofit.Builder()
@@ -40,7 +50,8 @@ public class HeroViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<List<Hero>> call, Throwable t) {
-
+                Log.d("Errror here" ,t.getMessage());
+                Toast.makeText(getApplication(),"Error : " + t.getMessage(),Toast.LENGTH_LONG).show();
             }
         });
     }
